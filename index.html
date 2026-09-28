@@ -68,17 +68,23 @@
                         <span id="syncIndicator" class="w-2 h-2 rounded-full bg-amber-500 animate-pulseGlow"></span>
                         <span id="syncText" class="text-[10px] text-slate-400 font-medium">Connecting...</span>
                         <span id="controlModeBadge" class="ml-2 px-2 py-0.5 rounded-full bg-indigo-500/15 text-indigo-300 text-[9px] font-bold">PHONE CONTROLLER</span>
-                        <span id="displayModeBadge" class="ml-2 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 text-[9px] font-bold">DISPLAY</span>
+                        <span id="displayModeBadge" class="ml-2 px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-300 text-[9px] font-bold">LAPTOP SCOREBOARD</span>
                     </div>
                 </div>
             </div>
             
-            <div class="flex items-center space-x-2 controller-only">
-                <button onclick="triggerVictoryCelebration()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition shadow-md shadow-orange-500/20 flex items-center space-x-1.5">
+            <div class="flex items-center space-x-2">
+                <!-- Mode Switcher Helper for convenience -->
+                <div class="bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 flex items-center space-x-1 text-[11px] font-semibold">
+                    <button onclick="switchMode('control')" id="btnModeControl" class="px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white">Phone</button>
+                    <button onclick="switchMode('display')" id="btnModeDisplay" class="px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white">Laptop</button>
+                </div>
+
+                <button onclick="triggerVictoryCelebration()" class="controller-only px-3 py-1.5 text-xs font-bold rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white transition shadow-md shadow-orange-500/20 flex items-center space-x-1.5">
                     <i class="fa-solid fa-award"></i>
                     <span class="hidden sm:inline">Party</span>
                 </button>
-                <button onclick="resetAllScores()" class="px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition flex items-center space-x-1.5 border border-rose-500/30">
+                <button onclick="resetAllScores()" class="controller-only px-3 py-1.5 text-xs font-bold rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 transition flex items-center space-x-1.5 border border-rose-500/30">
                     <i class="fa-solid fa-rotate-right"></i>
                     <span class="hidden sm:inline">Reset</span>
                 </button>
@@ -143,7 +149,7 @@
                         <i class="fa-solid fa-clock-rotate-left text-indigo-400"></i>
                         <span>Activity Stream</span>
                     </h3>
-                    <button onclick="clearHistoryLog()" class="text-[10px] text-slate-400 hover:text-slate-200 transition underline">Clear</button>
+                    <button onclick="clearHistoryLog()" class="controller-only text-[10px] text-slate-400 hover:text-slate-200 transition underline">Clear</button>
                 </div>
                 
                 <div id="historyLogContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[300px] lg:max-h-[420px]">
@@ -215,9 +221,10 @@
 
     <script type="module">
         const urlParams = new URLSearchParams(window.location.search);
-        const QUIZ_MODE = urlParams.get('mode') === 'display' ? 'display' : 'control';
+        let QUIZ_MODE = urlParams.get('mode') === 'control' ? 'control' : 'display'; // Default to display (laptop scoreboard) if mode isn't explicitly controller
         const QUIZ_ROOM = (urlParams.get('room') || 'extraqudrata-v5').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40) || 'extraqudrata-v5';
-        document.body.classList.add(QUIZ_MODE === 'display' ? 'display-mode' : 'control-mode');
+        
+        applyModeUI();
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
@@ -252,8 +259,32 @@
             isTimerRunning: false
         };
 
+        window.switchMode = function(mode) {
+            QUIZ_MODE = mode;
+            const newUrl = `${window.location.pathname}?mode=${mode}&room=${QUIZ_ROOM}`;
+            window.history.replaceState({}, '', newUrl);
+            applyModeUI();
+            renderTeams();
+            showToast(`Switched to ${mode === 'control' ? 'Phone Controller' : 'Laptop Scoreboard'} mode`);
+        };
+
+        function applyModeUI() {
+            document.body.classList.remove('display-mode', 'control-mode');
+            document.body.classList.add(QUIZ_MODE === 'display' ? 'display-mode' : 'control-mode');
+            document.title = QUIZ_MODE === 'display' ? 'Extra Qudrata V5 — LAPTOP SCOREBOARD' : 'Extra Qudrata V5 — PHONE CONTROLLER';
+            
+            const btnCtrl = document.getElementById('btnModeControl');
+            const btnDisp = document.getElementById('btnModeDisplay');
+            if (QUIZ_MODE === 'control') {
+                btnCtrl.className = "px-2.5 py-1 rounded-lg transition bg-indigo-600 text-white font-bold shadow";
+                btnDisp.className = "px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white";
+            } else {
+                btnDisp.className = "px-2.5 py-1 rounded-lg transition bg-emerald-600 text-white font-bold shadow";
+                btnCtrl.className = "px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white";
+            }
+        }
+
         window.onload = async function() {
-            document.title = QUIZ_MODE === 'display' ? 'Extra Qudrata V5 — LIVE SCOREBOARD' : 'Extra Qudrata V5 — PHONE CONTROLLER';
             renderTeams();
             renderLeaderboard();
             renderHistoryLog();
@@ -283,7 +314,6 @@
             if (!db) return;
             const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'quiz_state_v5');
 
-            // Listen for real-time updates across mobile & laptops
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
                     const data = docSnap.data();
@@ -314,7 +344,7 @@
         }
 
         async function saveStateToCloud() {
-            if (!db) return;
+            if (!db || QUIZ_MODE !== 'control') return; // Only controller syncs writes to cloud to maintain single source of truth
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'quiz_state_v5');
                 await setDoc(docRef, {
@@ -406,7 +436,7 @@
                     <div class="flex items-center justify-between my-3">
                         <div>
                             <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Score</div>
-                            <div id="score-val-${team.id}" class="text-3xl sm:text-4xl font-black font-mono tracking-tight text-white">${team.score}</div>
+                            <div id="score-val-${team.id}" class="text-3xl sm:text-5xl font-black font-mono tracking-tight text-white">${team.score}</div>
                         </div>
                         <button onclick="openCustomPointModal('${team.id}')" class="controller-only px-3 py-2 bg-slate-800/90 hover:bg-slate-800 text-slate-300 rounded-xl text-xs font-semibold border border-slate-700 transition flex items-center space-x-1 shadow-sm">
                             <i class="fa-solid fa-calculator text-indigo-400"></i>
@@ -414,7 +444,7 @@
                         </button>
                     </div>
 
-                    <!-- Point Buttons: Positive (+2,+3,+5,+7,+10,+15,+20) & Negative (-1,-2,-3,-4,-5,-10) -->
+                    <!-- Point Buttons: Positive & Negative -->
                     <div class="space-y-1 controller-only">
                         <div class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Point Increments</div>
                         <div class="grid grid-cols-7 gap-1 mb-1">
