@@ -202,7 +202,11 @@
 
     <script type="module">
         const urlParams = new URLSearchParams(window.location.search);
-        let QUIZ_MODE = urlParams.get('mode') === 'control' ? 'control' : 'display'; 
+        
+        // Automatically default mobile devices to control mode if mode param is omitted
+        const isMobileDevice = /Mobi|Android|iPhone/i.test(navigator.userAgent);
+        let QUIZ_MODE = urlParams.get('mode') === 'control' || (isMobileDevice && !urlParams.has('mode')) ? 'control' : 'display'; 
+        
         const QUIZ_ROOM = (urlParams.get('room') || 'extraqudrata-v5').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40) || 'extraqudrata-v5';
         
         applyModeUI();
