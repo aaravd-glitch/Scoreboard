@@ -43,7 +43,6 @@
     </script>
     <style>
         body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .display-only-hidden { display: block; }
         body.display-mode .controller-only { display: none !important; }
         body.display-mode #timerControls { display: none !important; }
         body.display-mode #displayModeBadge { display: inline-flex !important; }
@@ -74,7 +73,6 @@
             </div>
             
             <div class="flex items-center space-x-2">
-                <!-- Mode Switcher Helper for convenience -->
                 <div class="bg-slate-800/80 p-1 rounded-xl border border-slate-700/60 flex items-center space-x-1 text-[11px] font-semibold">
                     <button onclick="switchMode('control')" id="btnModeControl" class="px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white">Phone</button>
                     <button onclick="switchMode('display')" id="btnModeDisplay" class="px-2.5 py-1 rounded-lg transition text-slate-400 hover:text-white">Laptop</button>
@@ -94,10 +92,7 @@
 
     <main class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 grid grid-cols-1 lg:grid-cols-4 gap-4">
         
-        <!-- Left 3 columns: Timer & 4 Team Cards -->
         <div class="lg:col-span-3 space-y-4">
-            
-            <!-- Match Timer Bar -->
             <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3.5 shadow-xl backdrop-blur-sm flex items-center justify-between">
                 <div class="flex items-center space-x-3">
                     <div class="p-2.5 bg-slate-800 rounded-xl text-indigo-400 ring-1 ring-slate-700/50">
@@ -119,17 +114,10 @@
                 </div>
             </div>
 
-            <!-- Exactly 4 Teams Cards Grid -->
-            <div id="teamsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5">
-                <!-- Dynamically rendered team cards -->
-            </div>
-
+            <div id="teamsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-3.5"></div>
         </div>
 
-        <!-- Right Column: Standings & History Stream -->
         <div class="lg:col-span-1 space-y-4 flex flex-col">
-            
-            <!-- Leaderboard Standings -->
             <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3.5 shadow-xl backdrop-blur-sm">
                 <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-800">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-2">
@@ -137,12 +125,9 @@
                         <span>Live Standings</span>
                     </h3>
                 </div>
-                <div id="leaderboardList" class="space-y-1.5">
-                    <!-- Dynamically rendered standings -->
-                </div>
+                <div id="leaderboardList" class="space-y-1.5"></div>
             </div>
 
-            <!-- Activity Log Stream -->
             <div class="bg-slate-900/90 border border-slate-800/80 rounded-2xl p-3.5 shadow-xl backdrop-blur-sm flex-1 flex flex-col min-h-[260px]">
                 <div class="flex items-center justify-between mb-2 pb-1.5 border-b border-slate-800">
                     <h3 class="text-xs font-bold uppercase tracking-wider text-slate-200 flex items-center space-x-2">
@@ -153,14 +138,10 @@
                 </div>
                 
                 <div id="historyLogContainer" class="flex-1 overflow-y-auto space-y-2 pr-1 max-h-[300px] lg:max-h-[420px]">
-                    <div class="text-center py-6 text-slate-500 text-xs italic">
-                        Connecting to live sync stream...
-                    </div>
+                    <div class="text-center py-6 text-slate-500 text-xs italic">Connecting to live sync stream...</div>
                 </div>
             </div>
-
         </div>
-
     </main>
 
     <!-- Custom Point Input Modal -->
@@ -221,14 +202,14 @@
 
     <script type="module">
         const urlParams = new URLSearchParams(window.location.search);
-        let QUIZ_MODE = urlParams.get('mode') === 'control' ? 'control' : 'display'; // Default to display (laptop scoreboard) if mode isn't explicitly controller
+        let QUIZ_MODE = urlParams.get('mode') === 'control' ? 'control' : 'display'; 
         const QUIZ_ROOM = (urlParams.get('room') || 'extraqudrata-v5').replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 40) || 'extraqudrata-v5';
         
         applyModeUI();
 
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const baseAppId = typeof __app_id !== 'undefined' ? __app_id : 'extra-qudrata-v5-scio-quiz';
         const appId = `${baseAppId}-${QUIZ_ROOM}`;
@@ -243,9 +224,8 @@
         };
 
         let app, db, auth, userId = null;
-        let isCloudSynced = false;
+        let isRemoteUpdate = false; // Flag to prevent cyclic update loops
 
-        // Application State
         let state = {
             teams: [
                 { id: 'teamA', name: 'Team A', score: 0, gradient: 'from-indigo-600/20 to-purple-600/10', border: 'border-indigo-500/40', badge: 'bg-indigo-500' },
@@ -316,6 +296,7 @@
 
             onSnapshot(docRef, (docSnap) => {
                 if (docSnap.exists()) {
+                    isRemoteUpdate = true;
                     const data = docSnap.data();
                     if (data.teams) {
                         state.teams = data.teams;
@@ -323,17 +304,17 @@
                     if (data.history) {
                         state.history = data.history;
                     }
-                    if (typeof data.timerSeconds === 'number' && !state.isTimerRunning) {
+                    if (typeof data.timerSeconds === 'number') {
                         state.timerSeconds = data.timerSeconds;
                         updateTimerDisplay();
                     }
                     renderTeams();
                     renderLeaderboard();
                     renderHistoryLog();
+                    isRemoteUpdate = false;
                 } else {
                     saveStateToCloud();
                 }
-                isCloudSynced = true;
                 document.getElementById('syncIndicator').className = "w-2 h-2 rounded-full bg-emerald-500";
                 document.getElementById('syncText').innerText = "Live Synced";
             }, (error) => {
@@ -344,7 +325,7 @@
         }
 
         async function saveStateToCloud() {
-            if (!db || QUIZ_MODE !== 'control') return; // Only controller syncs writes to cloud to maintain single source of truth
+            if (!db || isRemoteUpdate) return; 
             try {
                 const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'quiz_state_v5');
                 await setDoc(docRef, {
@@ -381,11 +362,10 @@
                 state.timerInterval = setInterval(() => {
                     state.timerSeconds++;
                     updateTimerDisplay();
-                    if (state.timerSeconds % 5 === 0) {
-                        saveStateToCloud();
-                    }
+                    saveStateToCloud();
                 }, 1000);
             }
+            saveStateToCloud();
         };
 
         window.resetTimer = function() {
@@ -432,7 +412,6 @@
                         </div>
                     </div>
 
-                    <!-- Score display & custom button -->
                     <div class="flex items-center justify-between my-3">
                         <div>
                             <div class="text-[9px] uppercase font-bold text-slate-400 tracking-wider">Score</div>
@@ -444,7 +423,6 @@
                         </button>
                     </div>
 
-                    <!-- Point Buttons: Positive & Negative -->
                     <div class="space-y-1 controller-only">
                         <div class="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Point Increments</div>
                         <div class="grid grid-cols-7 gap-1 mb-1">
