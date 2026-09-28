@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Extra Qudrata V5 Scio Quiz scoreboard</title>
+    <title>Extra Qudrata V5 Scio quiz scoreboard</title>
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- FontAwesome for icons -->
@@ -57,7 +57,7 @@
                     <i class="fa-solid fa-graduation-cap text-white text-xl"></i>
                 </div>
                 <div>
-                    <h1 class="font-extrabold text-lg sm:text-2xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400">Extra Qudrata V5 Scio quiz scoreboard</h1>
+                    <h1 class="font-extrabold text-base sm:text-2xl tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-white via-indigo-200 to-indigo-400">Extra Qudrata V5 Scio quiz scoreboard</h1>
                     <p class="text-xs text-slate-400 font-medium">Interactive 4-Team Quiz Competition Hub</p>
                 </div>
             </div>
@@ -105,12 +105,12 @@
                 <div class="flex items-center space-x-3 w-full md:w-auto justify-end">
                     <div class="text-right">
                         <div class="text-[10px] uppercase tracking-wider text-slate-400 font-bold">Participants</div>
-                        <div class="text-sm font-extrabold text-indigo-300">4 Teams Active</div>
+                        <div class="text-sm font-extrabold text-indigo-300">4 Teams Active (A, B, C, D)</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Global Quick Point Operations Panel (+2, +3, +5, +7, +10, +15, +20, -10) -->
+            <!-- Global Quick Point Operations Panel -->
             <div class="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-4 sm:p-5 shadow-2xl backdrop-blur-sm">
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-3 gap-2">
                     <div class="flex items-center space-x-2">
@@ -125,26 +125,32 @@
                         <span class="text-[11px] text-slate-400 font-medium">Target:</span>
                         <select id="globalTargetSelect" class="bg-slate-950 border border-slate-800 text-indigo-300 text-xs rounded-xl px-3 py-1.5 font-bold focus:outline-none focus:border-indigo-500 shadow-inner">
                             <option value="all">⚡ All 4 Teams</option>
-                            <option value="team-0">Team Alpha</option>
-                            <option value="team-1">Team Beta</option>
-                            <option value="team-2">Team Gamma</option>
-                            <option value="team-3">Team Delta</option>
+                            <option value="team-0">Team A</option>
+                            <option value="team-1">Team B</option>
+                            <option value="team-2">Team C</option>
+                            <option value="team-3">Team D</option>
                         </select>
                     </div>
                 </div>
                 
                 <p class="text-xs text-slate-400 mb-3">Click any point value below to instantly apply it to the selected target(s).</p>
 
-                <!-- Point Buttons: +2, +3, +5, +7, +10, +15, +20, -10 -->
-                <div class="grid grid-cols-4 sm:grid-cols-8 gap-2">
-                    <button onclick="applyPointsToTarget(2)" class="py-2.5 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">+2</button>
-                    <button onclick="applyPointsToTarget(3)" class="py-2.5 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">+3</button>
-                    <button onclick="applyPointsToTarget(5)" class="py-2.5 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">+5</button>
-                    <button onclick="applyPointsToTarget(7)" class="py-2.5 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">+7</button>
-                    <button onclick="applyPointsToTarget(10)" class="py-2.5 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">+10</button>
-                    <button onclick="applyPointsToTarget(15)" class="py-2.5 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">+15</button>
-                    <button onclick="applyPointsToTarget(20)" class="py-2.5 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">+20</button>
-                    <button onclick="applyPointsToTarget(-10)" class="py-2.5 px-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-black rounded-xl text-xs sm:text-sm transition transform active:scale-95 shadow-sm">-10</button>
+                <!-- Point Buttons: Positive & Negative -->
+                <div class="grid grid-cols-4 sm:grid-cols-13 gap-1.5">
+                    <button onclick="applyPointsToTarget(2)" class="py-2 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">+2</button>
+                    <button onclick="applyPointsToTarget(3)" class="py-2 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">+3</button>
+                    <button onclick="applyPointsToTarget(5)" class="py-2 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">+5</button>
+                    <button onclick="applyPointsToTarget(7)" class="py-2 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">+7</button>
+                    <button onclick="applyPointsToTarget(10)" class="py-2 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">+10</button>
+                    <button onclick="applyPointsToTarget(15)" class="py-2 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">+15</button>
+                    <button onclick="applyPointsToTarget(20)" class="py-2 px-1 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">+20</button>
+                    
+                    <button onclick="applyPointsToTarget(-1)" class="py-2 px-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">-1</button>
+                    <button onclick="applyPointsToTarget(-2)" class="py-2 px-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">-2</button>
+                    <button onclick="applyPointsToTarget(-3)" class="py-2 px-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">-3</button>
+                    <button onclick="applyPointsToTarget(-4)" class="py-2 px-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">-4</button>
+                    <button onclick="applyPointsToTarget(-5)" class="py-2 px-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">-5</button>
+                    <button onclick="applyPointsToTarget(-10)" class="py-2 px-1 bg-rose-500/10 hover:bg-rose-500/20 border border-rose-500/30 text-rose-400 font-black rounded-xl text-xs transition transform active:scale-95 shadow-sm">-10</button>
                 </div>
             </div>
 
@@ -250,16 +256,16 @@
     </div>
 
     <script>
-        // Exactly 4 Teams State Management
+        // Exactly 4 Teams State Management (Team A, Team B, Team C, Team D)
         let state = {
             teams: [
-                { id: 0, name: 'Team Alpha', score: 25, color: 'indigo', gradient: 'from-indigo-600/20 to-purple-600/10', border: 'border-indigo-500/40', badge: 'bg-indigo-500' },
-                { id: 1, name: 'Team Beta', score: 18, color: 'blue', gradient: 'from-blue-600/20 to-cyan-600/10', border: 'border-blue-500/40', badge: 'bg-blue-500' },
-                { id: 2, name: 'Team Gamma', score: 22, color: 'emerald', gradient: 'from-emerald-600/20 to-teal-600/10', border: 'border-emerald-500/40', badge: 'bg-emerald-500' },
-                { id: 3, name: 'Team Delta', score: 15, color: 'amber', gradient: 'from-amber-600/20 to-orange-600/10', border: 'border-amber-500/40', badge: 'bg-amber-500' }
+                { id: 0, name: 'Team A', score: 20, color: 'indigo', gradient: 'from-indigo-600/20 to-purple-600/10', border: 'border-indigo-500/40', badge: 'bg-indigo-500' },
+                { id: 1, name: 'Team B', score: 15, color: 'blue', gradient: 'from-blue-600/20 to-cyan-600/10', border: 'border-blue-500/40', badge: 'bg-blue-500' },
+                { id: 2, name: 'Team C', score: 18, color: 'emerald', gradient: 'from-emerald-600/20 to-teal-600/10', border: 'border-emerald-500/40', badge: 'bg-emerald-500' },
+                { id: 3, name: 'Team D', score: 10, color: 'amber', gradient: 'from-amber-600/20 to-orange-600/10', border: 'border-amber-500/40', badge: 'bg-amber-500' }
             ],
             history: [
-                { text: 'Extra Qudrata V5 Scio quiz scoreboard initialized with 4 teams.', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) }
+                { text: 'Extra Qudrata V5 Scio quiz scoreboard initialized with 4 teams (A, B, C, D).', time: new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'}) }
             ],
             timerSeconds: 0,
             timerInterval: null,
@@ -348,18 +354,24 @@
                         </button>
                     </div>
 
-                    <!-- Requested Quick Buttons: +2, +3, +5, +7, +10, +15, +20, -10 -->
+                    <!-- Point Buttons: Positive & Negative (-1 to -5, -10, +2 to +20) -->
                     <div class="space-y-1.5">
                         <div class="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Quick Point Adjustments</div>
-                        <div class="grid grid-cols-4 gap-1.5">
-                            <button onclick="updateScore(${team.id}, 2)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded-lg text-xs transition">+2</button>
-                            <button onclick="updateScore(${team.id}, 3)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded-lg text-xs transition">+3</button>
-                            <button onclick="updateScore(${team.id}, 5)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded-lg text-xs transition">+5</button>
-                            <button onclick="updateScore(${team.id}, 7)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded-lg text-xs transition">+7</button>
-                            <button onclick="updateScore(${team.id}, 10)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded-lg text-xs transition">+10</button>
-                            <button onclick="updateScore(${team.id}, 15)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded-lg text-xs transition">+15</button>
-                            <button onclick="updateScore(${team.id}, 20)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded-lg text-xs transition">+20</button>
-                            <button onclick="updateScore(${team.id}, -10)" class="py-1.5 px-1 bg-slate-800/70 hover:bg-rose-600/30 border border-slate-700 hover:border-rose-500/50 text-rose-400 font-bold rounded-lg text-xs transition">-10</button>
+                        <div class="grid grid-cols-6 sm:grid-cols-13 gap-1">
+                            <button onclick="updateScore(${team.id}, 2)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded text-[11px] transition">+2</button>
+                            <button onclick="updateScore(${team.id}, 3)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded text-[11px] transition">+3</button>
+                            <button onclick="updateScore(${team.id}, 5)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded text-[11px] transition">+5</button>
+                            <button onclick="updateScore(${team.id}, 7)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded text-[11px] transition">+7</button>
+                            <button onclick="updateScore(${team.id}, 10)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded text-[11px] transition">+10</button>
+                            <button onclick="updateScore(${team.id}, 15)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded text-[11px] transition">+15</button>
+                            <button onclick="updateScore(${team.id}, 20)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-emerald-600/30 border border-slate-700 hover:border-emerald-500/50 text-emerald-400 font-bold rounded text-[11px] transition">+20</button>
+                            
+                            <button onclick="updateScore(${team.id}, -1)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-rose-600/30 border border-slate-700 hover:border-rose-500/50 text-rose-400 font-bold rounded text-[11px] transition">-1</button>
+                            <button onclick="updateScore(${team.id}, -2)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-rose-600/30 border border-slate-700 hover:border-rose-500/50 text-rose-400 font-bold rounded text-[11px] transition">-2</button>
+                            <button onclick="updateScore(${team.id}, -3)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-rose-600/30 border border-slate-700 hover:border-rose-500/50 text-rose-400 font-bold rounded text-[11px] transition">-3</button>
+                            <button onclick="updateScore(${team.id}, -4)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-rose-600/30 border border-slate-700 hover:border-rose-500/50 text-rose-400 font-bold rounded text-[11px] transition">-4</button>
+                            <button onclick="updateScore(${team.id}, -5)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-rose-600/30 border border-slate-700 hover:border-rose-500/50 text-rose-400 font-bold rounded text-[11px] transition">-5</button>
+                            <button onclick="updateScore(${team.id}, -10)" class="py-1 px-0.5 bg-slate-800/70 hover:bg-rose-600/30 border border-slate-700 hover:border-rose-500/50 text-rose-400 font-bold rounded text-[11px] transition">-10</button>
                         </div>
                     </div>
                 `;
@@ -387,7 +399,6 @@
             renderLeaderboard();
             showToast(actionDesc);
 
-            // Trigger confetti if score goes above 50
             if (team.score >= 50 && delta > 0) {
                 triggerVictoryCelebration();
             }
@@ -480,7 +491,6 @@
             showToast("Match scores reset");
         }
 
-        // Edit Team Name
         function openEditTeamModal(teamId) {
             const team = state.teams.find(t => t.id === teamId);
             if (!team) return;
@@ -513,7 +523,6 @@
             renderLeaderboard();
         }
 
-        // Custom Point Modal
         function openCustomPointModal(teamId) {
             const team = state.teams.find(t => t.id === teamId);
             if (!team) return;
@@ -539,7 +548,6 @@
             updateScore(teamId, val);
         }
 
-        // Victory celebration with confetti
         function triggerVictoryCelebration() {
             confetti({
                 particleCount: 120,
