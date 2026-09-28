@@ -211,14 +211,15 @@
         import { getFirestore, doc, setDoc, getDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'extra-qudrata-v5-scio-quiz';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {
-            apiKey: "demo-key",
-            authDomain: "demo.firebaseapp.com",
-            projectId: "demo-project",
-            storageBucket: "demo.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef"
-        };
+        const firebaseConfig = {
+    apiKey: "AIzaSyDtT-YQ9VJue5LVupMqzGhjKKFzUdG12Qo",
+    authDomain: "scoreboard-67.firebaseapp.com",
+    projectId: "scoreboard-67",
+    storageBucket: "scoreboard-67.firebasestorage.app",
+    messagingSenderId: "574082570301",
+    appId: "1:574082570301:web:aaf8c1b6a38f515ec9f254",
+    measurementId: "G-ML7R5W8H88"
+};
 
         let app, db, auth, userId = null;
         let isCloudSynced = false;
